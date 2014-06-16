@@ -124,3 +124,24 @@ After filling the missing values following are the calculated mean and medain va
 * The total median of the total number of steps taken each day is `r totalmedian`.
 
 We see an increase in mean (`r totalmean`) and median (`r totalmedian`) total daily number of steps when we compare it with previous mean and median with missing values in the dataset.
+
+##Are there differences in activity patterns between weekdays and weekends?
+
+### 1. Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
+
+```{r}
+steps_data_noNA$day = ifelse(as.POSIXlt(as.Date(steps_data_noNA$date))$wday%%6 == 
+    0, "weekend", "weekday")
+
+steps_data_noNA$day = factor(steps_data_noNA$day, levels = c("weekday", "weekend"))
+```
+
+
+### 2. Make a panel plot containing a time series plot (i.e. type = “l”) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). The plot should look something like the following, which was creating using simulated data:
+
+```{r}
+stepsInterval2 = aggregate(steps ~ interval + day, steps_data_noNA, mean)
+library(lattice)
+xyplot(steps ~ interval | factor(day), data = stepsInterval2, aspect = 1/2, 
+    type = "l")
+```
